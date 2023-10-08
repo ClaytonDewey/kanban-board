@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import TrashIcon from '../icons/TrashIcon';
-import { Column, Id } from '../types';
+import { Column, Id, Task } from '../types';
 import { CSS } from '@dnd-kit/utilities';
 import PlusIcon from '../icons/PlusIcon';
 
@@ -11,10 +11,11 @@ interface Props {
   updateColumn: (id: Id, title: string) => void;
 
   createTask: (columnId: Id) => void;
+  tasks: Task[]
 }
 
 function ColumnContainer(props: Props) {
-  const { column, deleteColumn, updateColumn, createTask } = props;
+  const { column, deleteColumn, updateColumn, createTask, tasks } = props;
 
   const [editMode, setEditMode] = useState(false);
 
@@ -51,9 +52,6 @@ function ColumnContainer(props: Props) {
     <div
       {...attributes}
       {...listeners}
-      onClick={() => {
-        setEditMode(true)
-      }}
       ref={setNodeRef}
       style={style}
       className="
@@ -67,7 +65,11 @@ function ColumnContainer(props: Props) {
     "
     >
       {/* Column title */}
-      <div className="
+      <div
+        onClick={() => {
+          setEditMode(true)
+        }}
+        className="
         bg-mainBackgroundColor
         text-medium
         h-[60px]
@@ -123,7 +125,11 @@ function ColumnContainer(props: Props) {
         </button>
       </div>
       {/* Column task container */}
-      <div className="flex flex-grow">Content</div>
+      <div className="flex flex-grow flex-col gap4 p2 overflow-x-hidden overflow-y-auto">
+        {tasks.map(task => (
+          <div key={task.id}>{task.content}</div>
+        ))}
+      </div>
       {/* Column footer */}
       <button
         className='flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black'
