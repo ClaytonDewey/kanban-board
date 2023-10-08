@@ -108,7 +108,6 @@ function KanbanBoard() {
   }
 
   function onDragStart(event: DragStartEvent) {
-    console.log('DRAG START', event);
     if (event.active.data.current?.type === 'Column') {
       setActiveColumn(event.active.data.current.column);
     }
