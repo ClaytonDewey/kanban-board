@@ -4,6 +4,7 @@ import TrashIcon from '../icons/TrashIcon';
 import { Column, Id, Task } from '../types';
 import { CSS } from '@dnd-kit/utilities';
 import PlusIcon from '../icons/PlusIcon';
+import TaskCard from './TaskCard';
 
 interface Props {
   column: Column;
@@ -125,9 +126,9 @@ function ColumnContainer(props: Props) {
         </button>
       </div>
       {/* Column task container */}
-      <div className="flex flex-grow flex-col gap4 p2 overflow-x-hidden overflow-y-auto">
+      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
         {tasks.map(task => (
-          <div key={task.id}>{task.content}</div>
+          <TaskCard key={task.id} task={task} />
         ))}
       </div>
       {/* Column footer */}
