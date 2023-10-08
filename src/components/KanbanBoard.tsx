@@ -1,7 +1,6 @@
-import { useMemo, useState } from 'react';
 import PlusIcon from '../icons/PlusIcon';
+import { useMemo, useState } from 'react';
 import { Column, Id, Task } from '../types';
-import { nanoid } from 'nanoid';
 import ColumnContainer from './ColumnContainer';
 import {
   DndContext,
@@ -9,11 +8,13 @@ import {
   DragOverlay,
   DragStartEvent,
   PointerSensor,
-  useSensors,
   useSensor,
+  useSensors,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { createPortal } from 'react-dom';
+import { nanoid } from 'nanoid';
+import TaskCard from './TaskCard';
 
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
@@ -21,6 +22,9 @@ function KanbanBoard() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -99,6 +103,13 @@ function KanbanBoard() {
                 )}
               />
             )}
+            {activeTask && (
+              <TaskCard
+                task={activeTask}
+                deleteTask={deleteTask}
+                updateTask={updateTask}
+              />
+            )}
           </DragOverlay>,
           document.body
         )}
@@ -156,6 +167,10 @@ function KanbanBoard() {
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === 'Column') {
       setActiveColumn(event.active.data.current.column);
+    }
+
+    if (event.active.data.current?.type === 'Task') {
+      setActiveTask(event.active.data.current.task);
     }
   }
 
