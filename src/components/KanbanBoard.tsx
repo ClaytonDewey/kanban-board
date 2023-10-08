@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import PlusIcon from '../icons/PlusIcon';
-import { Column, Id } from '../types';
+import { Column, Id, Task } from '../types';
 import { nanoid } from 'nanoid';
 import ColumnContainer from './ColumnContainer';
 import {
@@ -18,6 +18,7 @@ import { createPortal } from 'react-dom';
 function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const sensors = useSensors(
@@ -53,6 +54,7 @@ function KanbanBoard() {
                   column={col}
                   deleteColumn={deleteColumn}
                   updateColumn={updateColumn}
+                  createTask={createTask}
                 />
               ))}
             </SortableContext>
@@ -86,6 +88,7 @@ function KanbanBoard() {
                 column={activeColumn}
                 deleteColumn={deleteColumn}
                 updateColumn={updateColumn}
+                createTask={createTask}
               />
             )}
           </DragOverlay>,
@@ -94,6 +97,16 @@ function KanbanBoard() {
       </DndContext>
     </div>
   );
+
+  function createTask(columnId: Id) {
+    const newTask: Task = {
+      id: nanoid(),
+      columnId,
+      content: `Task ${tasks.length + 1}`,
+    };
+
+    setTasks([...tasks, newTask]);
+  }
 
   function createNewColumn() {
     const columnToAdd: Column = {
