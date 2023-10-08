@@ -1,4 +1,11 @@
+import { useState } from 'react';
+import PlusIcon from '../icons/PlusIcon';
+import { Column } from '../types';
+import { nanoid } from 'nanoid';
+
 function KanbanBoard() {
+  const [columns, setColumns] = useState<Column[]>([]);
+  console.log(columns);
   return (
     <div
       className='
@@ -11,26 +18,44 @@ function KanbanBoard() {
       overflow-y-hidden
       px-[40px]
     '>
-      <div className='m-auto'>
+      <div className='m-auto flex gap-4'>
+        <div className='flex gap-4'>
+          {columns.map((col) => (
+            <div>{col.title}</div>
+          ))}
+        </div>
         <button
+          onClick={() => createNewColumn()}
           className='
-    h-[60px]
-    w-[350px]
-    min-w-[350px]
-    cursor-pointer
-    rounded-lg
-    bg-mainBackgroundColor
-    border-2
-    border-columnBackgroundColor
-    p-4
-    ring-rose-500
-    hover:ring-2
-    '>
+          h-[60px]
+          w-[350px]
+          min-w-[350px]
+          cursor-pointer
+          rounded-lg
+          bg-mainBackgroundColor
+          border-2
+          border-columnBackgroundColor
+          p-4
+          ring-rose-500
+          hover:ring-2
+          flex
+          gap-2
+        '>
+          <PlusIcon />
           Add Column
         </button>
       </div>
     </div>
   );
+
+  function createNewColumn() {
+    const columnToAdd: Column = {
+      id: nanoid(),
+      title: `Column ${columns.length + 1}`,
+    };
+
+    setColumns([...columns, columnToAdd]);
+  }
 }
 
 export default KanbanBoard;
